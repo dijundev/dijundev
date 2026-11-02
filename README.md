@@ -27,6 +27,16 @@
 
 固定 seed、温度 0、用例与判据入库，同一套集可完全复现。
 
+### [dsl-guard](https://github.com/dijundev/dsl-guard) · 表达式与 SQL 的确定性边界
+
+配置驱动的系统里，「表达式」和「SQL」是最容易变成执行入口的两处。
+
+自研递归下降解析器 + **AST 白名单**，不开放 `eval`——语法里根本没有属性访问、下标、`import`，
+所以 `__import__('os').system(...)` 连解析阶段都过不去；SQL 侧用 sqlglot 做只读校验、
+危险函数拦截，并把权限条件下推到**最内层 WHERE**（防「总数 − 可见明细」的推断式越权）。
+
+53 个测试，含 21 条攻击表达式全部拦截、0 误杀。
+
 ## 技术栈
 
 `Python` · `FastAPI` · `LangGraph` · `MySQL` · `Redis` · `Qdrant` · `Elasticsearch` · `sqlglot` · `pytest`
